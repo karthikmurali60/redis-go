@@ -28,19 +28,21 @@ func main() {
 func handleConnection(connection net.Conn) {
 	defer connection.Close()
 
-	buffer := make([]byte, 1024)
-	n, err := connection.Read(buffer)
-	if err != nil {
-		fmt.Println("Error reading from connection: ", err.Error())
-		os.Exit(1)
-	}
-
-	log.Println("Received the following data: ", string(buffer[:n]))
-
-	message := []byte("+PONG\r\n")
-	_, err = connection.Write(message)
-	if err != nil {
-		fmt.Println("Error writing to connection: ", err.Error())
-		os.Exit(1)
+	for {
+		buffer := make([]byte, 1024)
+		n, err := connection.Read(buffer)
+		if err != nil {
+			fmt.Println("Error reading from connection: ", err.Error())
+			os.Exit(1)
+		}
+	
+		log.Println("Received the following data: ", string(buffer[:n]))
+	
+		message := []byte("+PONG\r\n")
+		_, err = connection.Write(message)
+		if err != nil {
+			fmt.Println("Error writing to connection: ", err.Error())
+			os.Exit(1)
+		}
 	}
 }
